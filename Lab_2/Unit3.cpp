@@ -330,7 +330,7 @@ void __fastcall TForm3::ButtonSaveDialogClock(TObject *Sender)
 		for(int i = 0; i < Database.size(); i++) {
 			fout << delta << FormatPatient(i, delta) << delta << lend; // запись данных в файл
 		}
-		fout.close();  // закрытие файла
+	fout.close();  // закрытие файла
 	}
 }
 //---------------------------------------------------------------------------
