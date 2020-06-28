@@ -1,0 +1,5 @@
+|Efimchik Pavel Vladimirovich|Men|18|Angina|1|
+|Mankevich Artem Olegovich|Men|18|Shizofrenia|13|
+|Last_Name Name Middle_Name|Women|24|Cystitis|35|
+|Ivanov Ivan Ivanovich|Men|45|Angina|20|
+|qqq|Men|27|Corona|45|
