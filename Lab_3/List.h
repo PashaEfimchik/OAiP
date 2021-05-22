@@ -3,24 +3,24 @@
 #ifndef ListH
 #define ListH
 
-template <class T>  // универсальный шаблон класса Т
+template <class T> 
 class List {
 	struct Top {
-		T value; // значение элемента
-		Top* prev; // предыдущий элемент
-		Top* next; // следующий элемент
+		T value;
+		Top* prev; 
+		Top* next; 
 
-		Top(){    // конструктор с начальными значениями null
+		Top(){   
 			prev = nullptr;
 			next = nullptr;
 		}
 	};
 
-	Top* Base;   // переменная структуры Тор класса
+	Top* Base;   
 	int Size = 0;
 
 public:
-	List(){   // конструктор с начальной инициализацией
+	List(){   
 		Size = 0;
 		Base = new Top;
 		if(!Base)
@@ -28,38 +28,37 @@ public:
 		Base->prev = Base;
 		Base->next = Base;
 	}
-	struct iterator {  // создание своего итератора
+	struct iterator {  
 		Top* ptr;
 
 		iterator(Top* x){
 			ptr = x;
 		}
-		iterator(){  // конструктор задающий null элементам
+		iterator(){  
 			ptr = nullptr;
 		}
 
-		iterator & operator ++(){   // перегрузка оператора ++
+		iterator & operator ++(){   
 			(*this) = iterator(this->ptr->next);
 			return *this;
 		}
-						  // перегрузка оператора ==
 		bool operator == (const iterator & it) const {
 			return this->ptr == it.ptr;
-		}                // перегрузка оператора !=
+		}                
 		bool operator != (const iterator & it) const {
 			return this->ptr != it.ptr;
 		}
 	};
 
-	void clear(){  // функция очищения списка
+	void clear(){  
 		while(begin() != end())
 			pop_back();
 	}
-	~List(){  // деструктор
+	~List(){  
 		clear();
 		delete Base;
 	}
-							 // получение текущих значений
+							 
 	void push_after(const iterator & it, const T & x){
 		Top* tmp = new Top();
 		if(!tmp)
@@ -71,23 +70,23 @@ public:
 		it.ptr->next = tmp;
 		Size++;
 	}
-	void push_back(const T & x){  // добавление в конец
+	void push_back(const T & x){  
 		push_after(Base->prev, x);
 	}
-	void push_front(const T & x){   // добавление в начало
+	void push_front(const T & x){   
 		push_after(Base, x);
 	}
-	void erase(const iterator & it){ // стирание текущих элементов
+	void erase(const iterator & it){ 
 		if(it == end()) return;
 		it.ptr->next->prev = it.ptr->prev;
 		it.ptr->prev->next = it.ptr->next;
-		delete it.ptr;  // очистка памяти
+		delete it.ptr;  
 		Size--;
 	}
-	void pop_back(){  // стирание с конца
+	void pop_back(){ 
 		erase(Base->prev);
 	}
-	void pop_front(){   // стирание с начала
+	void pop_front(){  
 		erase(Base->next);
 	}
 
@@ -96,7 +95,7 @@ public:
 	}
 	iterator end(){
 		return Base;
-	}                          // перегрузка оператора индексации
+	}                          
 	T & operator [] (const iterator & it) {
 		return it.ptr->value;
 	}
