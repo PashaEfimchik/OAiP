@@ -18,37 +18,37 @@ __fastcall TForm3::TForm3(TComponent* Owner)
 
 #include <fstream>
 
-struct Product     // объявление структуры продукции
+struct Product     
 {
 	AnsiString Name;
 	int Count;
 	int Number;
 };
 
-List<Product> Database;  // список продукций
-List< List<Product>::iterator > CurList;   // назначение итератора
+List<Product> Database;  
+List< List<Product>::iterator > CurList;   
 
-AnsiString FormatProduct(const Product & x, AnsiString delta){    // формат записи
+AnsiString FormatProduct(const Product & x, AnsiString delta){    
 	return x.Name + delta + IntToStr(x.Count) + delta + IntToStr(x.Number);
 }
 
-void ReWrite(){     // перезапись списка
+void ReWrite(){     
 	CurList.clear();
 	if(Form3->ComboBoxSearch->ItemIndex > 0){
-		for(auto it = Database.begin(); it != Database.end(); ++it){ // использование auto вместо типа
+		for(auto it = Database.begin(); it != Database.end(); ++it){ 
 			bool flag = false;
 			try {
 				switch(Form3->ComboBoxSearch->ItemIndex){
-				case 1:                         // определение для поиска по имени
+				case 1:                         
 					if(Database[it].Name.LowerCase().Pos(Form3->EditSearch->Text.Trim().LowerCase()) != 0)
 						flag = true;
 					break;
-				case 2:                  // определение для поиска по номеру
+				case 2:                
 					if(Database[it].Number == StrToInt(Form3->EditSearch->Text))
 						flag = true;
 					break;
 				case 3:
-					int Summ = 0;      // определение для поиска по цеху
+					int Summ = 0;      
 					for(auto itT = Database.begin(); itT != Database.end(); ++itT)
 						if(Database[it].Number == Database[itT].Number)
 							Summ += Database[itT].Count;
@@ -61,7 +61,7 @@ void ReWrite(){     // перезапись списка
 				return;
 			}
 			if(flag)
-				CurList.push_back(it); // запись в список
+				CurList.push_back(it); 
 		}
 	} else {
 		for(auto it = Database.begin(); it != Database.end(); ++it){
@@ -70,7 +70,7 @@ void ReWrite(){     // перезапись списка
 	}
 	Form3->ListBox->Clear();
 	for(auto it = CurList.begin(); it != CurList.end(); ++it){
-		Form3->ListBox->Items->Add(FormatProduct(Database[CurList[it]], " | ")); // добавление данных в ListBox
+		Form3->ListBox->Items->Add(FormatProduct(Database[CurList[it]], " | ")); 
 	}
 }
 
@@ -79,12 +79,12 @@ const char lend = '\n';
 
 void __fastcall TForm3::ButtonSaveDialogClick(TObject *Sender)
 {
-	if (SaveDialog->Execute()) { // открытие файла для записи
+	if (SaveDialog->Execute()) { 
 		ofstream fout(SaveDialog->FileName.c_str());
-		if(!fout){            // проверка на открытие файла
+		if(!fout){           
 			ShowMessage("File is not founded");
 			return;
-		}                      // запись данных в файл
+		}                      
 		for(auto it = Database.begin(); it != Database.end(); ++it){
 			fout << delta << FormatProduct(Database[it], delta) << delta << lend;
 		}
@@ -95,13 +95,13 @@ void __fastcall TForm3::ButtonSaveDialogClick(TObject *Sender)
 
 void __fastcall TForm3::ButtonDeleteClick(TObject *Sender)
 {
-	if(ListBox->ItemIndex != -1){  // проверка на наличие в списке элементов
+	if(ListBox->ItemIndex != -1){  
 		auto it = CurList.begin();
 		for(int i = 0; i < ListBox->ItemIndex; i++)
 			++it;
-		Database.erase(CurList[it]); // очистка списка
+		Database.erase(CurList[it]); 
         CheckBoxAddProductClick(Sender);
-		ReWrite();     // перезапись списка
+		ReWrite();    
 	}
 }
 //---------------------------------------------------------------------------
@@ -113,7 +113,7 @@ void __fastcall TForm3::ComboBoxSearchChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm3::ButtonSearchClick(TObject *Sender)
 {
-	ReWrite();    // перезапись списка
+	ReWrite();    
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm3::ListBoxClick(TObject *Sender)
@@ -123,24 +123,24 @@ void __fastcall TForm3::ListBoxClick(TObject *Sender)
 		auto it = CurList.begin();
 		for(int i = 0; i < p; i++)
 			++it;
-		CheckBoxAddProduct->Checked = false; // когда флаг выключен данные не добавляются
-		EditName->Text = Database[CurList[it]].Name;  // а изменяются
+		CheckBoxAddProduct->Checked = false; 
+		EditName->Text = Database[CurList[it]].Name;  
 		EditCount->Text = IntToStr(Database[CurList[it]].Count);
 		EditNumber->Text = IntToStr(Database[CurList[it]].Number);
-		ReWrite();    // перезапись списка
-		ListBox->ItemIndex = p; // присваивание нового индекса
+		ReWrite();    
+		ListBox->ItemIndex = p; 
 	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm3::ButtonOpenDialogClick(TObject *Sender)
 {
-	if (OpenDialog->Execute()) {   // открытие файла для чтения
+	if (OpenDialog->Execute()) {  
 		ifstream fin(OpenDialog->FileName.c_str());
 		if(!fin){
 			ShowMessage("File is not founded");
 			return;
 		}
-		Database.clear(); // очистка базы данных
+		Database.clear(); 
 		while(true) {
 			Product tmp;
 			AnsiString str = "";
@@ -165,21 +165,21 @@ void __fastcall TForm3::ButtonOpenDialogClick(TObject *Sender)
 			int p = 2, i = 2;
 
 			while(str[i] != delta) i++;
-			tmp.Name = str.SubString(p, i - p); // подстрока строки Name
+			tmp.Name = str.SubString(p, i - p); 
 			i++;
 			p = i;
 
 			while(str[i] != delta) i++;
-			tmp.Count = StrToInt(str.SubString(p, i - p)); // подстрока строки Count
+			tmp.Count = StrToInt(str.SubString(p, i - p)); 
 			i++;
 			p = i;
 
 			while(str[i] != delta) i++;
-			tmp.Number = StrToInt(str.SubString(p, i - p));  // подстрока строки Number
+			tmp.Number = StrToInt(str.SubString(p, i - p));  
 			i++;
 			p = i;
 
-			Database.push_back(tmp); // запись данных в базу данных
+			Database.push_back(tmp); 
 		}
 		ButtonFlushListClick(Sender);
 	}
@@ -187,24 +187,24 @@ void __fastcall TForm3::ButtonOpenDialogClick(TObject *Sender)
 
 //---------------------------------------------------------------------------
 
-Product getProduct(){    // функция добавления продукции
+Product getProduct(){    
 	Product tmp;
 
-	tmp.Name = Form3->EditName->Text.Trim(); // добавление наименовании
+	tmp.Name = Form3->EditName->Text.Trim(); 
 	if(tmp.Name.Length() == 0){
 		ShowMessage("Invalid input");
 		throw 0;
 	}
 
 	try {
-		tmp.Count = StrToInt(Form3->EditCount->Text); // добавление количества
+		tmp.Count = StrToInt(Form3->EditCount->Text); 
 	} catch (...) {
 		ShowMessage("Invalid input");
 		throw 0;
 	}
 
 	try {
-		tmp.Number = StrToInt(Form3->EditNumber->Text); // добавление номера цеха
+		tmp.Number = StrToInt(Form3->EditNumber->Text); 
 	} catch (...) {
 		ShowMessage("Invalid input");
 		throw 0;
@@ -224,7 +224,7 @@ void __fastcall TForm3::ButtonFlushListClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm3::CheckBoxAddProductClick(TObject *Sender)
 {
-	ListBox->ItemIndex = -1; // сброс выбранной продукции
+	ListBox->ItemIndex = -1; 
 	EditName->Text = "";
 	EditCount->Text = "";
 	EditNumber->Text = "";
@@ -233,7 +233,7 @@ void __fastcall TForm3::CheckBoxAddProductClick(TObject *Sender)
 void __fastcall TForm3::ButtonSaveChangesClick(TObject *Sender)
 {
     if(CheckBoxAddProduct->Checked) {
-		Product tmp;         // при включенном флаге данные добавляются в базу
+		Product tmp;        
 		try {
 			tmp = getProduct();
 		} catch(...) {
@@ -251,7 +251,7 @@ void __fastcall TForm3::ButtonSaveChangesClick(TObject *Sender)
 		CheckBoxAddProductClick(Sender);
 		ReWrite();
 	} else {
-		if(ListBox->ItemIndex != -1){  // при выключенном - изменяются
+		if(ListBox->ItemIndex != -1){  
 			int p = ListBox->ItemIndex;
 			auto itCur = CurList.begin();
 			for(int i = 0; i < p; i++)
@@ -272,7 +272,7 @@ void __fastcall TForm3::ButtonSaveChangesClick(TObject *Sender)
 				Database.erase(CurList[itCur]);
 			} else {
 				Database[CurList[itCur]] = tmp;
-			}                // изменение в базу и включение флага
+			}               
 			CheckBoxAddProduct->Checked = true;
 			ReWrite();
 		}
