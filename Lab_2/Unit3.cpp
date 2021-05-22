@@ -111,7 +111,6 @@ Patient getPatient(){
 		ShowMessage("Input Name");
 		throw 0;
 	}
-
 	if(Form3->RadioGroupSex->ItemIndex == 0) 
 		tmp.Sex = SexM;
 	else if(Form3->RadioGroupSex->ItemIndex == 1)
