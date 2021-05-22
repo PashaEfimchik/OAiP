@@ -92,7 +92,6 @@ void __fastcall TForm3::ButtonSaveDialogClick(TObject *Sender)
 	}
 }
 
-
 void __fastcall TForm3::ButtonDeleteClick(TObject *Sender)
 {
 	if(ListBox->ItemIndex != -1){  
