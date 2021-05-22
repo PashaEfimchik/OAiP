@@ -15,7 +15,6 @@ class List {
 			next = nullptr;
 		}
 	};
-
 	Top* Base;   
 	int Size = 0;
 
