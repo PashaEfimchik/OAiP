@@ -11,14 +11,14 @@ protected:
 	int TSize;
 	List<T> *Table;
 
-	int(*HashF)(const T & x); // выделение памяти
+	int(*HashF)(const T & x); 
 
-	int GetHash(const T & x) {   // функция получения всех данных памяти
+	int GetHash(const T & x) {  
 		return ((HashF(x) % TSize) + TSize) % TSize;
 	}
 
 public:
-	Hash(int tSize, int(*hashF)(const T&)) { // конструктор класса Hash
+	Hash(int tSize, int(*hashF)(const T&)) { 
 		HashF = hashF;
 		TSize = tSize;
 		Table = new List<T>[TSize];
@@ -26,22 +26,22 @@ public:
 			throw;
 	}
 
-	void clear() {     // функция очищения таблицы
+	void clear() {    
 		for (int i = 0; i < TSize; i++)
 			Table[i].clear();
 	}
 
-	~Hash() {    // деструктор
+	~Hash() {   
 		clear();
 		delete[]Table;
 	}
 
-	void insert(const T & x) {  // функция вставки данных в таблицу
+	void insert(const T & x) {  
 		int i = GetHash(x);
 		Table[i].push_back(x);
 	}
 
-	void deletion(const T & x) {  // функция стирания данных из таблицы
+	void deletion(const T & x) { 
 		int i = GetHash(x);
 		for (auto it = Table[i].begin(); it != Table[i].end(); ++it)
 			if (x == Table[i][it]) {
@@ -50,7 +50,7 @@ public:
 			}
 	}
 
-	bool contain(const T & x) {   // проверка на наличие элементов в таблице
+	bool contain(const T & x) {  
 		int i = GetHash(x);
 		for (auto it = Table[i].begin(); it != Table[i].end(); ++it)
 			if (x == Table[i][it])
