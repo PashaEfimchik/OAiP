@@ -10,7 +10,7 @@
 TForm3 *Form3;
 float a, b, c, d, e;
 
-bool IsVar(char ch) // функция проверки на ввод только a, b, c, d, e
+bool IsVar(char ch) 
 {
 	if (96 < ch && ch < 102)
 	{
@@ -19,7 +19,7 @@ bool IsVar(char ch) // функция проверки на ввод тольк�
 	return false;
 }
 
-int IsOper(char ch)  // переопределение знаков в числа
+int IsOper(char ch)  
 {
 	if (ch == '+' || ch == '-')
 	{
@@ -44,7 +44,7 @@ int IsOper(char ch)  // переопределение знаков в числ�
 	return 0;
 }
 
-float GetValue(char ch)  // функция получение значений
+float GetValue(char ch)  
 {
 	switch(ch)
 	{
@@ -80,7 +80,7 @@ float GetValue(char ch)  // функция получение значений
 	}
 }
 
-float Calc(float a, float b, char ch) // функция операций между a и b
+float Calc(float a, float b, char ch) 
 {
 switch(ch)
 	{
@@ -101,7 +101,7 @@ switch(ch)
 		}
 		case '/':
 		{
-			if (b != 0)  // проверка на нулевое значение знаменателя
+			if (b != 0)  
 			{
 				return a / b;
 			}
@@ -127,14 +127,14 @@ float Calculate(string inp)
 	{
 		if(IsVar(inp[i]))
 		{
-			vars.Push((float)GetValue(inp[i])); // вставка элемента в вершину Stack
+			vars.Push((float)GetValue(inp[i])); 
 		}
 		else
 		{
-			b = vars.Back()->floatValue;  // присваивание данных из последовательности для поддержания pop и push
+			b = vars.Back()->floatValue;  
 			vars.Pop();
 			a = vars.Back()->floatValue;
-			vars.Pop(); // удаление элемента с вершины Stack
+			vars.Pop(); 
 			vars.Push(Calc(a, b, inp[i]));
 		}
 	}
@@ -143,15 +143,15 @@ float Calculate(string inp)
 
 AnsiString Convert(string inp)
 {
-	Stack ops;         // переменная стек
+	Stack ops;        
 	AnsiString str;
-	int brackets = 0;  // переменная количества скобок
+	int brackets = 0; 
 
 	inp += ']';
 
 	for (int i = 0; i < inp.length(); i++)
 	{
-		if(IsVar(inp[i]))   // проверка на запись a, b, c, d, e
+		if(IsVar(inp[i]))   
 		{
 			str += inp[i];
 		}
@@ -161,55 +161,54 @@ AnsiString Convert(string inp)
 			{
 				case 1:
 				{
-					if(!ops.Empty() && ops.Back()->Value != '(')  // перенос '(' в стек
+					if(!ops.Empty() && ops.Back()->Value != '(')  
 					{
-						str += ops.Back()->Value; // присваивание pyfxtybq
+						str += ops.Back()->Value; 
 						ops.Pop();
 					}
-					ops.Push(inp[i]); // добавление значений в стек
+					ops.Push(inp[i]); 
 					break;
 				}
 				case 2:
 				{
 					if(!ops.Empty() && ops.Back()->Value != '(')
 					{
-						if(IsOper(ops.Back()->Value) == 2) // если происходи умножение или деление
+						if(IsOper(ops.Back()->Value) == 2) 
 						{
 							str += ops.Back()->Value;
-							ops.Pop(); // удаление из стек
+							ops.Pop(); 
 						}
 					}
-					ops.Push(inp[i]);     // добавление в стек
+					ops.Push(inp[i]);     
 					break;
 				}
 				case 3:
 				{
-					ops.Push(inp[i]);  // добавление в стек
-					brackets++;     // закрытие скобок
+					ops.Push(inp[i]);  
+					brackets++;    
 					break;
 				}
 				case 4:
 				{
-					if(!ops.Empty() && brackets != 0)  // проверка на наличие скобок и значений
+					if(!ops.Empty() && brackets != 0)  
 					{
-						while(ops.Back()->Value != '(' && !ops.Empty()) // считает все если нет скобок
+						while(ops.Back()->Value != '(' && !ops.Empty()) 
 						{
 							str += ops.Back()->Value;
 							ops.Pop();
 						}
-						ops.Pop();  // удаление из стек
+						ops.Pop();  
 					}
 					else
 					{
 						ShowMessage("Balance of brackets is not respected");
-						// баланс скобок не соблюден
-						throw 8;  // вызов исключения
+						throw 8;  
 					}
 					break;
 				}
 				case 5:
 				{
-					while(!ops.Empty())   // очистка стек
+					while(!ops.Empty())  
 					{
 						str += ops.Back()->Value;
 						ops.Pop();
@@ -219,7 +218,6 @@ AnsiString Convert(string inp)
 				default:
 				{
 					ShowMessage("No such variable or operator available");
-					// нет такой переменной или оператора
 					throw 8;
 					break;
 				}
@@ -233,7 +231,7 @@ AnsiString Convert(string inp)
 __fastcall TForm3::TForm3(TComponent* Owner) : TForm(Owner)
 {
 
-Task->Clear();    // обнуление данных Edit
+Task->Clear();    
 AEdit->Clear();
 BEdit->Clear();
 CEdit->Clear();
@@ -245,21 +243,21 @@ EEdit->Clear();
 void __fastcall TForm3::SolveButtonClick(TObject *Sender)
 {
 
-wstringstream s; // потоковый класс для работы со строками с большим значением
+wstringstream s; 
 
-	a = (float)AEdit->Text.ToDouble();  // присваивание значений переменным
+	a = (float)AEdit->Text.ToDouble(); 
 	b = (float)BEdit->Text.ToDouble();
 	c = (float)CEdit->Text.ToDouble();
 	d = (float)DEdit->Text.ToDouble();
 	e = (float)EEdit->Text.ToDouble();
-	Notation->Text = Convert(((AnsiString)Task->Text).c_str()); // конвертирование обозначений
-	Result->Text = Calculate(((AnsiString)Notation->Text).c_str()); // получение результата
+	Notation->Text = Convert(((AnsiString)Task->Text).c_str()); 
+	Result->Text = Calculate(((AnsiString)Notation->Text).c_str()); 
 
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm3::FillVariantButtonClick(TObject *Sender)
 {
-									// авто заполнение своего (8) варианта
+									
 AEdit->Text = "8,5";
 	BEdit->Text = "0,3";
 	CEdit->Text = "2,4";
@@ -273,6 +271,6 @@ AEdit->Text = "8,5";
 //---------------------------------------------------------------------------
 void __fastcall TForm3::Button1Click(TObject *Sender)
 {
-Close();        // закрытие формы
+Close();       
 }
 //---------------------------------------------------------------------------
