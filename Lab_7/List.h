@@ -3,24 +3,24 @@
 #ifndef ListH
 #define ListH
 
-template<class T>   // шаблон класса Т
+template<class T>   
 class List {
 protected:
 	struct Top {
-		T value;    // значение элемента
-		Top* prev;  // предыдущий элемент
-		Top* next;  // следующий элемент
+		T value;   
+		Top* prev;  
+		Top* next; 
 
-		Top() {        // конструктор с начальными значениями null
+		Top() {        
 			prev = nullptr;
 			next = nullptr;
 		}
 	};
 
-	Top* base;  // переменная структуры Тор класса
+	Top* base;  
 
 public:
-	List() {    // конструктор с начальной инициализацией
+	List() {    
 		base = new Top;
 		if (!base)
 			throw 100;
@@ -28,70 +28,70 @@ public:
 		base->next = base;
 	}
 
-	struct Iter {   // создание своего итератора
+	struct Iter {   
 		Top* ptr;
 
 		Iter(Top* x) {
 			ptr = x;
 		}
 
-		Iter() {     // конструктор задающий null элементам
+		Iter() {    
 			ptr = nullptr;
 		}
 
-		Iter & operator++() {  // перегрузка оператора ++
+		Iter & operator++() { 
 			(*this) = Iter(this->ptr->next);
 			return *this;
 		}
 
-		Iter & operator--() {   // перегрузка оператора --
+		Iter & operator--() {   
 			(*this) = Iter(this->ptr->prev);
 			return *this;
 		}
 
-		bool operator == (const Iter & it) const {  // перегрузка оператора ==
+		bool operator == (const Iter & it) const {  
 			return this->ptr == it.ptr;
 		}
 
-		bool operator != (const Iter & it) const { // перегрузка оператора !=
+		bool operator != (const Iter & it) const {
 			return this->ptr != it.ptr;
 		}
 
 	};
 
-	void clear() {    // функция очищения списка
+	void clear() {    
 		while (begin() != end())
 			pop_back();
 	}
 
-	~List() {  // деструктор
+	~List() {  
 		clear();
 		delete base;
 	}
 
-	T deletion(const Iter & it) { // стирание текущих элементов
+	T deletion(const Iter & it) { 
 		if (it == end())
 			throw 100;
 		it.ptr->next->prev = it.ptr->prev;
 		it.ptr->prev->next = it.ptr->next;
 		T rtrn = it.ptr->value;
-		delete it.ptr;  // очистка памяти
+		delete it.ptr;  
 		return rtrn;
 	}
 
-	T pop_back() {     // стирание с конца
+	T pop_back() {    
 		return deletion(base->prev);
 	}
 
-	T pop_front() {     // стирание с начала
+	T pop_front() {   
 		return deletion(base->next);
 	}
 
-	T & back() {       // добавление значений в конец
+	T & back() {     
 		return base->prev->value;
 	}
 
-	T & front() {    // добавление значений в начало
+	T & front() {    
 		return base->next->value;
 	}
 
@@ -107,7 +107,7 @@ public:
 		return base;
 	}
 
-	void push_after(const Iter & it, const T & x) {  // получение текущих значений
+	void push_after(const Iter & it, const T & x) {  
 		Top* tmp = new Top();
 		if (!tmp)
 			throw 100;
@@ -118,15 +118,15 @@ public:
 		it.ptr->next = tmp;
 	}
 
-	void push_back(const T & x) {  // добавление в конец
+	void push_back(const T & x) { 
 		push_after(base->prev, x);
 	}
 
-	void push_front(const T & x) {  // добавление в начало
+	void push_front(const T & x) {  
 		push_after(base, x);
 	}
 
-	T & operator[](const Iter & it) { // возвращение текущего элемента
+	T & operator[](const Iter & it) { 
 		return it.ptr->value;
 	}
 };
