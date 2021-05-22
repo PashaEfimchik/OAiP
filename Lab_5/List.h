@@ -3,32 +3,32 @@
 #ifndef ListH
 #define ListH
 
-template <class T>  // шаблон класса Т
+template <class T>  
 class List {
 protected:
 	struct Top {
-		T value;   // значения
-		Top* prev;    // предыдущий элемент
-		Top* next;    // следующий элемент
+		T value;   
+		Top* prev;    
+		Top* next;   
 
-		Top(){               // конструктор
-			prev = nullptr;      // присваивает начальное значени = null
+		Top(){              
+			prev = nullptr;      
 			next = nullptr;
 		}
 	};
 
-	Top* Base;  // переменная структуры
+	Top* Base;  
 public:
 	List(){
-		Base = new Top;      // назначение значений
+		Base = new Top;     
 		if(!Base)
 			throw 100;
 		Base->prev = Base;
 		Base->next = Base;
 	}
 
-	struct iterator {     // структура для создания своего итератора
-		Top* ptr;  // создание переменной структуры Top
+	struct iterator {    
+		Top* ptr; 
 
 		iterator(Top* x){
 			ptr = x;
@@ -37,34 +37,34 @@ public:
 			ptr = nullptr;
 		}
 
-		iterator & operator ++(){ // перегрузка оператора ++
+		iterator & operator ++(){ 
 			(*this) = iterator(this->ptr->next);
 			return *this;
 		}
-		iterator & operator --(){    // перегрузка оператора --
+		iterator & operator --(){    
 			(*this) = iterator(this->ptr->prev);
 			return *this;
 		}
 
-		bool operator == (const iterator & it) const { // перегрузка оператора ==
+		bool operator == (const iterator & it) const { 
 			return this->ptr == it.ptr;
 		}
-		bool operator != (const iterator & it) const {  // перегрузка оператора !=
+		bool operator != (const iterator & it) const {  
 			return this->ptr != it.ptr;
 		}
 
 	};
 
 	void clear(){
-		while(begin() != end())  // функция очищения списка
+		while(begin() != end())  
 			pop_back();
 	}
-	~List(){  // деструктор
+	~List(){ 
 		clear();
 		delete Base;
 	}
 
-	void push_after(const iterator & it, const T & x){   // функция присваивания текущих элементов
+	void push_after(const iterator & it, const T & x){   
 		Top* tmp = new Top();
 		if(!tmp) throw 100;
 		tmp->prev = it.ptr;
@@ -73,13 +73,13 @@ public:
 		it.ptr->next->prev = tmp;
 		it.ptr->next = tmp;
 	}
-	void push_back(const T & x){   // переопределение функции push_back
+	void push_back(const T & x){   
 		push_after(Base->prev, x);
 	}
 	void push_front(const T & x){
 		push_after(Base, x);
 	}
-	T erase(const iterator & it){    // стирание текущего элемента
+	T erase(const iterator & it){   
 		if(it == end()) throw 100;
 		it.ptr->next->prev = it.ptr->prev;
 		it.ptr->prev->next = it.ptr->next;
@@ -88,20 +88,20 @@ public:
 		return rtrn;
 	}
 	T pop_back(){
-		return erase(Base->prev);   // стирание предыдущего элемента
+		return erase(Base->prev);  
 	}
 	T pop_front(){
-		return erase(Base->next);   // стирание слеующего элемента
+		return erase(Base->next);   
 	}
 	T & back(){
-		return Base->prev->value;   // получение значений предыдущего
+		return Base->prev->value;  
 	}
 	T & front(){
-		return Base->next->value;   // получение значений следующего
+		return Base->next->value;  
 	}
 
 	iterator begin(){
-		return Base->next;    // в начале используется следующий элемент
+		return Base->next;   
 	}
 	iterator last(){
 		return Base->prev;
@@ -110,7 +110,7 @@ public:
 		return Base;
 	}
 	T & operator [] (const iterator & it){
-		return it.ptr->value;      // возвращение текущего элемента
+		return it.ptr->value;      
 	}
 };
 
