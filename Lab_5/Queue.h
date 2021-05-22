@@ -6,13 +6,13 @@
 
 //---------------------------------------------------------------------------
 
-template <class T>  // универсальный шаблон класса Т
+template <class T>  
 class Queue : public List<T> {
 
-typedef typename List<T>::iterator iterator;  // создание своего итератора
+typedef typename List<T>::iterator iterator;  
 
 private:
-	void push_into(List<T> & to, iterator & it){  // функция разыменования
+	void push_into(List<T> & to, iterator & it){  
 		it.ptr->prev = to.last().ptr;
 		it.ptr->next = to.end().ptr;
 		to.last().ptr->next = it.ptr;
@@ -21,7 +21,6 @@ private:
 
 public:
 
-			// функция разделения списков
 	void split(List<T> & out1, List<T> & out2, bool (*rule) (const T & a)){
 		for (iterator it = List<T>::begin(); it != List<T>::end(); )
 		{
@@ -39,7 +38,6 @@ public:
 		}
 		List<T>::end().ptr->prev = List<T>::end().ptr->next = List<T>::end().ptr;
 	}
-
 };
 
 //---------------------------------------------------------------------------
