@@ -3,45 +3,45 @@
 #ifndef TreeH
 #define TreeH
 
-template <class K, class V>  // универсальные шаблоны классов V и K
+template <class K, class V>  
 class Tree
 {
 protected:
-	struct Top    // структура "Верхушка"
+	struct Top   
 	{
-		K key;      // ключ
-		V value;     // значение
-		int level;    // уровень
-		Top* left;    // левое поддерево
-		Top* right;   // правое поддерево
+		K key;      
+		V value;    
+		int level;  
+		Top* left;  
+		Top* right; 
         Top(K Key, V Value, int Level, Top* Left, Top* Right)
-		{             // конструктор
+		{            
             key = Key;
 			value = Value;
             level = Level;
             left = Left;
             right = Right;
         }
-	} *root; // создание переменной структуры
-	Top* Insert(Top* vrt, K x)   // функция вставки
+	} *root; 
+	Top* Insert(Top* vrt, K x)   
     {
         if (!vrt)
             return new Top(x, V(), 1, nullptr, nullptr);
-		if (x < vrt->key)      // условие для заполнения левого поддерева
+		if (x < vrt->key)      
             vrt->left = Insert(vrt->left, x);
-		if (x > vrt->key)     // условие для заполнения правого поддерева
+		if (x > vrt->key)     
             vrt->right = Insert(vrt->right, x);
-		vrt = Skew(vrt);    // смещение
-		vrt = Split(vrt);  // разделение
+		vrt = Skew(vrt);    
+		vrt = Split(vrt); 
         return vrt;
     }
-	Top* Find(Top* vrt, K x)    // функция поиска
+	Top* Find(Top* vrt, K x)   
     {
         if (!vrt)
             return nullptr;
-		if(x < vrt->key)              // поиск по левому поддереву
+		if(x < vrt->key)        
             return Find(vrt->left, x);
-		if(x > vrt->key)              // поиск по правому поддереву
+		if(x > vrt->key)        
 			return Find(vrt->right, x);
         return vrt;
     }
@@ -79,7 +79,7 @@ protected:
             return FindLess(vrt->right, x);
         }
     }
-	Top* Skew(Top* vrt)    // функция сдвига
+	Top* Skew(Top* vrt) 
 	{
         if (!vrt)
             return nullptr;
@@ -94,7 +94,7 @@ protected:
         }
         return vrt;
     }
-	Top* Split(Top* vrt)   // функция разделения от верхушки дерева
+	Top* Split(Top* vrt)  
     {
         if (!vrt)
             return nullptr;
@@ -112,7 +112,7 @@ protected:
         }
         return vrt;
     }
-	Top* Erase(Top* vrt, K x)  // функция очистки
+	Top* Erase(Top* vrt, K x) 
     {
         if (!vrt)
             return nullptr;
@@ -121,26 +121,26 @@ protected:
         last = vrt;
         if(x < vrt->key)
         {
-			vrt->left = Erase(vrt->left, x);       // очистка левого поддерева
+			vrt->left = Erase(vrt->left, x);      
         }
         else
         {
             del = vrt;
-			vrt->right = Erase(vrt->right, x); // очистка правого поддерева
+			vrt->right = Erase(vrt->right, x);
 		}
         if(vrt == last)
         {
             if(!del || del->key != x)
                 return vrt;
-			del->key = vrt->key;   // удаление ключа
-			del->value = vrt->value;   // удаление значения
+			del->key = vrt->key;   
+			del->value = vrt->value;   
             del = nullptr;
             vrt = vrt->right;
             delete last;
             last = nullptr;
 		}
         else
-		{                  // проверка на заполнение дерева
+		{               
             if(((vrt->left ? vrt->left->level : 0) < vrt->level - 1) ||
                 ((vrt->right ? vrt->right->level : 0) < vrt->level - 1))
             {
@@ -161,7 +161,7 @@ protected:
         }
         return vrt;
     }
-	void Clear(Top* vrt)   // функция очищения дерева
+	void Clear(Top* vrt)   
     {
         if (vrt)
         {
@@ -171,64 +171,64 @@ protected:
         }
     }
 public:
-	Tree()     // конструктор
+	Tree()     
 	{
-		root = nullptr;  // задает начальное значение
+		root = nullptr;  
 	}
-	~Tree()     // деструктор
+	~Tree()    
 	{
-		clear();    // очищение
+		clear();    
     }
-	void erase(K index)  // функция очистки индекса
+	void erase(K index)  
     {
         root = Erase(root, index);
     }
-	void clear()   // очистка переменной
+	void clear()   
     {
         Clear(root);
         root = nullptr;
     }
-	void insert(K index) // присваивание значений переменной
+	void insert(K index) 
 	{
         root = Insert(root, index);
     }
-	V & operator [] (K index)   // перегрузка операции индексирования
+	V & operator [] (K index)  
     {
         insert(index);
         return Find(root, index)->value;
 	}
 
-	struct iterator {   // создание нового итератора
+	struct iterator {   
 		Top* ptr;
 
 		iterator(Top* x){
 			ptr = x;
 		}
-		iterator(){     // установка начального значения
+		iterator(){     
 			ptr = nullptr;
 		}
 
-		bool operator == (const iterator & it) const { // перегрузка оператора ==
+		bool operator == (const iterator & it) const { 
             return this->ptr == it.ptr;
 		}
-		bool operator != (const iterator & it) const {  // перегрузка оператора !=
+		bool operator != (const iterator & it) const {  
 			return this->ptr != it.ptr;
 		}
 
-		K & key(){      // получение ключа
+		K & key(){     
             return this->ptr->key;
         }
-		V & value(){    // получение значения
+		V & value(){   
             return this->ptr->value;
         }
 	};
-	iterator begin(){  // начальный итератор направляется на левое поддерево
+	iterator begin(){ 
 	    Top* vrt = root;
 	    while(vrt && vrt->left)
             vrt = vrt->left;
 		return iterator(vrt);
 	}
-	iterator last(){  // последний - на правое поддерево
+	iterator last(){ 
 	    Top* vrt = root;
 	    while(vrt && vrt->right)
             vrt = vrt->right;
@@ -237,13 +237,13 @@ public:
 	iterator end(){
 		return iterator(nullptr);
 	}
-	iterator next(iterator it){  // получение следующего итератора
+	iterator next(iterator it){ 
         return iterator(FindMore(root, it.ptr->key));
     }
-	iterator prev(iterator it){  // получение предыдущего итератора
+	iterator prev(iterator it){  
         return iterator(FindLess(root, it.ptr->key));
 	}
-	iterator find(K index)  // получение индекса
+	iterator find(K index)  
 	{
         return iterator(Find(root, index));
 	}
